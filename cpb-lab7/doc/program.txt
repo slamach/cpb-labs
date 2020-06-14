@@ -1,0 +1,55 @@
+	ORG 0xF9
+TR1:	WORD ? ;	Проверка корректной записи результата
+TR2:	WORD ? ;	Проверка использования флага переноса
+TR3:	WORD ? ;	Проверка сохранения состояния флага C
+RES:	WORD 1 ;	Результат проверок
+
+START:	CALL T1
+	ST TR1
+	BNE N2
+	ST RES
+N2:	CALL T2
+	ST TR2
+	BNE N3
+	ST RES
+N3:	CALL T3
+	ST TR3
+	BNE EN
+	ST RES
+EN:	HLT
+
+A1:	WORD 0x1
+B1:	WORD 0x2
+R1:	WORD 0x3
+T1:	LD A1
+	WORD 0x9EFC
+	LD B1
+	CMP R1
+	BNE WR
+	BR COR
+
+A2:	WORD 0x1
+B2:	WORD 0x2
+R2:	WORD 0x4
+T2:	CLC
+	CMC
+	LD A1
+	WORD 0x9EFC
+	LD B1
+	CMP R1
+	BNE WR
+	BR COR
+
+A3:	WORD 0x1
+B3:	WORD 0x2
+T3:	CLC
+	CMC
+	LD A1
+	WORD 0x9EFC
+	BCC WR
+	BR COR
+
+COR:	LD #1
+	RET
+WR:	LD #0
+	RET
